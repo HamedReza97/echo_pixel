@@ -5,13 +5,13 @@ import 'sections/about_section.dart';
 import 'sections/contact_section.dart';
 
 void main() {
-  runApp(const AsroDesign());
+  runApp(const EchoPixel());
 }
 
 final GlobalKey<_MyHomePageState> homePageKey = GlobalKey<_MyHomePageState>();
 
-class AsroDesign extends StatelessWidget {
-  const AsroDesign({super.key});
+class EchoPixel extends StatelessWidget {
+  const EchoPixel({super.key});
 
   @override
   Widget build(BuildContext context) {
