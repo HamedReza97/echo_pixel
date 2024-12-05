@@ -1,0 +1,41 @@
+name: echo_pixel
+description: "Graphic, User Interface Designer, Cross Platform Developer"
+publish_to: 'none' 
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  mysql1: ^0.20.0
+  cupertino_icons: ^1.0.8
+  carousel_slider: ^5.0.0
+  url_launcher: ^6.1.8
+  cached_network_image: ^3.2.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - images/Banner.png
+    - images/call-calling.svg
+    - images/
+    - images/portfolio/
+    - images/profile.webp
+    - images/contact.png
+    - homePage.json
+    - portfolio.json
+    - portfolio.json
+    - about_data.json
+    - contact_info.json
+    - images/Logo.png
+    - loading.gif
+
+

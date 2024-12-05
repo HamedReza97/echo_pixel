@@ -1,0 +1,43 @@
+{
+    "profile": {
+        "name": "Reza Rasoulzadeh",
+        "title": "Freelance designer and developer",
+        "description": "Creative graphic, userinterface designer and cross-platform developer with 7 years of experience in logo, poster, magazine, cover and UI/UX design and cross-platform development.",
+        "image": "profile.webp"
+    },
+    "employmentHistory": [{
+            "date": "January 2016 - Present",
+            "title": "Graphic Designer, Freelancer",
+            "subItems": [
+                "Successfully completed several freelance Graphic Design jobs with a strong customer satisfaction rate.",
+                "Ensured that the visions of the director and designer were carried out through production."
+            ]
+        },
+        {
+            "date": "January 2014 - December 2015",
+            "title": "Junior Graphic Designer",
+            "subItems": [
+                "Worked on various print media design projects including brochures, flyers, and posters.",
+                "Collaborated with senior designers to implement design ideas for client projects."
+            ]
+        }
+    ],
+    "skills": [
+        { "title": "Photoshop", "point": "80" },
+        { "title": "Illustrator", "point": "75" },
+        { "title": "Figma", "point": "90" },
+        { "title": "InDesign", "point": "70" },
+        { "title": "After Effects", "point": "20" },
+        { "title": "Solid Works", "point": "70" },
+        { "title": "Flutter", "point": "55" },
+        { "title": "C++ Programming", "point": "40" },
+        { "title": "Python", "point": "30" },
+        { "title": "UI/UX Design", "point": "90" },
+        { "title": "Microsoft Office Word", "point": "95" },
+        { "title": "Microsoft PowerPoint", "point": "80" },
+        { "title": "Microsoft Excel", "point": "80" },
+        { "title": "Abaqus", "point": "40" },
+        { "title": "Content Research & Development", "point": "80" },
+        { "title": "Logo Design", "point": "75" }
+    ]
+}

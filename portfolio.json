@@ -1,0 +1,68 @@
+{
+    "uiDesignItems": [{
+            "image": "Asro.webp",
+            "title": "Asro",
+            "description": "User interface design for Asro, a traveling company that offers seamless booking and travel experiences with a user-friendly interface."
+        },
+        {
+            "image": "Garantick-1.webp",
+            "title": "Garantick-1",
+            "description": "UI design for Garantick, a guarantee company, providing customers with secure and reliable services through an intuitive platform."
+        },
+        {
+            "image": "Garantick-2.webp",
+            "title": "Garantick-2",
+            "description": "A refined UI for Garantick, showcasing a professional design focused on customer trust and ease of navigation."
+        },
+        {
+            "image": "HappyTrainers-1.webp",
+            "title": "HappyTrainers-1",
+            "description": "UI design for HappyTrainers, an online personal training website that helps users achieve their fitness goals with engaging visuals and smooth navigation."
+        },
+        {
+            "image": "HappyTrainers-2.webp",
+            "title": "HappyTrainers-2",
+            "description": "User interface design for HappyTrainers, delivering an interactive fitness experience through a vibrant and motivating design."
+        },
+        {
+            "image": "HappyTrainers-3.webp",
+            "title": "HappyTrainers-3",
+            "description": "A clean and modern UI design for HappyTrainers, offering users easy access to personalized training plans and tracking tools."
+        },
+        {
+            "image": "HappyTrainers-4.webp",
+            "title": "HappyTrainers-4",
+            "description": "An energetic and modern design for HappyTrainers, combining visuals and functionality to enhance the user fitness journey."
+        },
+        {
+            "image": "HappyTrainers-5.webp",
+            "title": "HappyTrainers-5",
+            "description": "User interface design for HappyTrainers, offering a seamless and visually stimulating platform for tracking workouts and progress."
+        },
+        {
+            "image": "Persa-1.webp",
+            "title": "Persa-1",
+            "description": "UI design for Persa, an Iranian crafts shop offering unique, handcrafted products. The design highlights the cultural heritage and artisanal quality."
+        },
+        {
+            "image": "Persa-2.webp",
+            "title": "Persa-2",
+            "description": "A visually stunning UI for Persa, showcasing Iran's rich craftsmanship through an elegant and accessible shopping experience."
+        },
+        {
+            "image": "Persa-3.webp",
+            "title": "Persa-3",
+            "description": "Persa's user interface design, focusing on simplicity and elegance, making it easy for customers to explore and purchase Iranian crafts."
+        },
+        {
+            "image": "Persa-4.webp",
+            "title": "Persa-4",
+            "description": "A polished UI design for Persa, bringing Iranian craftsmanship to the digital world with a focus on user experience and aesthetic appeal."
+        },
+        {
+            "image": "Persa-5.webp",
+            "title": "Persa-5",
+            "description": "User interface design for Persa, designed to showcase the beauty and uniqueness of Iranian crafts through an inviting and smooth interface."
+        }
+    ]
+}

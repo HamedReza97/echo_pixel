@@ -1,0 +1,17 @@
+{
+    "contact_info": {
+        "phone": {
+            "number": "+989143966319",
+            "label": "Call"
+        },
+        "email": {
+            "address": "Reza.rasoulzadeh97@gmail.com",
+            "label": "Email"
+        },
+        "telegram": {
+            "link": "https://t.me/Rasoulzadeh",
+            "id": "@Rasoulzadeh",
+            "label": "Telegram"
+        }
+    }
+}
