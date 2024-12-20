@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:url_launcher/url_launcher.dart';
 
 class PortfolioSection extends StatefulWidget {
   const PortfolioSection({super.key});
-
   @override
   State<PortfolioSection> createState() => _PortfolioSectionState();
 }
@@ -14,8 +14,6 @@ class _PortfolioSectionState extends State<PortfolioSection> {
   bool isLoadingImages = true;
   List<Map<String, String>> uiDesignItems = [];
   List<Map<String, String>> graphicDesignItems = [];
-  List<Map<String, String>> developmentItems = [];
-  String url = "";
 
   @override
   void initState() {
@@ -29,47 +27,40 @@ class _PortfolioSectionState extends State<PortfolioSection> {
   }
 
   Future<void> _loadPortfolioData() async {
-    try {
-      final String jsonString = await rootBundle.loadString('portfolio.json');
-      final Map<String, dynamic> jsonData = jsonDecode(jsonString);
+  try {
+    final String jsonString = await rootBundle.loadString('portfolio.json');
+    final Map<String, dynamic> jsonData = jsonDecode(jsonString);
 
-      List<Map<String, String>> processItems(String category) {
-        if (jsonData.containsKey(category) && jsonData[category] is List) {
-          return (jsonData[category] as List<dynamic>)
-              .map((item) {
-                if (item is Map) {
-                  return item.map((key, value) =>
-                      MapEntry(key.toString(), value?.toString() ?? ''));
-                }
-                return <String, String>{};
-              })
-              .where((item) => item.isNotEmpty && item.containsKey('image'))
-              .toList();
-        }
-        return [];
+    List<Map<String, String>> processItems(String category) {
+      if (jsonData.containsKey(category) && jsonData[category] is List) {
+        return (jsonData[category] as List<dynamic>)
+            .map((item) => item is Map
+                ? item.map((key, value) => MapEntry(key.toString(), value?.toString() ?? ''))
+                : <String, String>{})
+            .where((item) => item.isNotEmpty && item.containsKey('image'))
+            .toList();
       }
-
-      final uiItems = processItems("uiDesignItems");
-      final graphicItems = processItems("graphicDesignItems");
-      final devItems = processItems("developmentItems");
-
-      setState(() {
-        uiDesignItems = uiItems;
-        graphicDesignItems = graphicItems;
-        developmentItems = devItems;
-        isLoadingImages = false;
-      });
-
-      debugPrint("Data loaded successfully.");
-    } catch (e) {
-      debugPrint("Error loading portfolio data: $e");
-      setState(() {
-        isLoadingImages = false;
-      });
+      return [];
     }
-  }
 
-  @override
+    final uiItems = processItems("uiDesignItems");
+    final graphicItems = processItems("graphicDesignItems");
+
+    setState(() {
+      uiDesignItems = uiItems;
+      graphicDesignItems = graphicItems;
+      isLoadingImages = false;
+    });
+
+    debugPrint("Data loaded successfully.");
+  } on Exception catch (e) {
+    debugPrint("Error loading portfolio data: $e");
+    setState(() {
+      isLoadingImages = false;
+    });
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     double ratio =
@@ -104,9 +95,29 @@ class _PortfolioSectionState extends State<PortfolioSection> {
               isLoadingImages
                   ? const Center(child: CircularProgressIndicator())
                   : buildGridView(graphicDesignItems, ratio),
-              isLoadingImages
-                  ? const Center(child: CircularProgressIndicator())
-                  : buildGridView(developmentItems, ratio),
+              Center(
+  child: Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Image.asset(
+        'images/GitHub-Logo.png',
+        height: 200,
+      ),
+      const SizedBox(height: 20),
+      ElevatedButton.icon(
+        icon: const Icon(Icons.open_in_browser),
+        label: const Text("Visit My GitHub"),
+        onPressed: () => launchUrl(Uri.parse("https://github.com/HamedReza97")),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Color.fromARGB(255, 0, 255, 177),
+          foregroundColor: Colors.black,
+          minimumSize: const Size(200, 52),
+      ),
+      )
+    ],
+  ),
+),
+
             ],
           ),
         ),
@@ -119,8 +130,8 @@ class _PortfolioSectionState extends State<PortfolioSection> {
         ? GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: ratio < 1.4 ? 1 : 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
+              crossAxisSpacing: 30,
+              mainAxisSpacing: 30,
               childAspectRatio: 1,
             ),
             itemCount: items.length,
@@ -139,12 +150,19 @@ class _PortfolioSectionState extends State<PortfolioSection> {
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: FadeInImage.assetNetwork(
-                    placeholder: 'loading.gif',
-                    image: imageUrl,
-                    imageScale: 0.5,
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    errorWidget: (context, url, error) => const Center(
+                      child: Icon(
+                        Icons.broken_image,
+                        color: Colors.grey,
+                        size: 40,
+                      ),
+                    ),
                     fit: BoxFit.cover,
-                    fadeInDuration: const Duration(seconds: 1),
                   ),
                 ),
               );
@@ -153,84 +171,102 @@ class _PortfolioSectionState extends State<PortfolioSection> {
         : const Center(child: Text("No item available"));
   }
 
-  void _showFullScreenImage(BuildContext context, String imagePath,
-      String title, String description) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: Center(
-              child: Stack(
-                children: [
-                  ClipRRect(
+  void _showFullScreenImage(
+    BuildContext context, String imagePath, String title, String description) {
+  showDialog(
+    context: context,
+    barrierDismissible: true, // Closes dialog when tapping outside
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop(); // Close on tap outside
+          },
+          child: Stack(
+            children: [
+              // Interactive Viewer for zoom and pan
+              InteractiveViewer(
+                boundaryMargin: const EdgeInsets.all(20),
+                minScale: 1.0,
+                maxScale: 4.0,
+                child: Center(
+                  child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: CachedNetworkImage(
                       imageUrl: imagePath,
-                      scale: 1,
-                      width: double.infinity,
-                      height: double.infinity,
                       placeholder: (context, url) => const Center(
                         child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                Color.fromARGB(255, 0, 255, 177))),
-                      ),
-                      errorWidget: (context, url, error) => const Center(
-                        child: Icon(
-                          Icons.broken_image,
-                          color: Colors.grey,
-                          size: 40,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              Color.fromARGB(255, 0, 255, 177)),
                         ),
                       ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.center,
-                        end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Colors.black],
+                      errorWidget: (context, url, error) => const Icon(
+                        Icons.broken_image,
+                        color: Colors.grey,
+                        size: 40,
                       ),
+                      fit: BoxFit.contain,
                     ),
                   ),
-                  Positioned(
-                    bottom: 50,
-                    left: 20,
-                    right: 20,
-                    child: Column(
-                      children: [
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          description,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.transparent, Colors.black87],
+                    ),
+                  ),
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        description,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 20,
+                right: 20,
+                child: IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ],
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
+
+
 }

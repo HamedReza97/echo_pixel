@@ -8,6 +8,7 @@ void main() {
   runApp(const EchoPixel());
 }
 
+// ignore: library_private_types_in_public_api
 final GlobalKey<_MyHomePageState> homePageKey = GlobalKey<_MyHomePageState>();
 
 class EchoPixel extends StatelessWidget {
@@ -89,32 +90,25 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   }
 
   void _onHorizontalDrag(DragEndDetails details) {
-    if (details.primaryVelocity != null) {
-      if (details.primaryVelocity! > 0) {
-        if (_currentPage > 0) {
-          setState(() {
-            _currentPage--;
-            _pageController.animateToPage(
-              _currentPage,
-              duration: const Duration(milliseconds: 600),
-              curve: Curves.easeInOut,
-            );
-          });
-        }
-      } else if (details.primaryVelocity! < 0) {
-        if (_currentPage < 3) {
-          setState(() {
-            _currentPage++;
-            _pageController.animateToPage(
-              _currentPage,
-              duration: const Duration(milliseconds: 600),
-              curve: Curves.easeInOut,
-            );
-          });
-        }
-      }
+  if (details.primaryVelocity != null) {
+    int newPage = _currentPage;
+    if (details.primaryVelocity! > 0 && _currentPage > 0) {
+      newPage--;
+    } else if (details.primaryVelocity! < 0 && _currentPage < 3) {
+      newPage++;
+    }
+    if (newPage != _currentPage) {
+      setState(() {
+        _currentPage = newPage;
+        _pageController.animateToPage(
+          _currentPage,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
+        );
+      });
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -232,26 +226,32 @@ Widget _buildPageView() {
   return PageView(
     controller: _pageController,
     scrollDirection: Axis.horizontal,
-    children: List.generate(4, (index) {
-      if (!_cachedSections.containsKey(index)) {
-        switch (index) {
-          case 0:
-            _cachedSections[index] = HomeSection();
-            break;
-          case 1:
-            _cachedSections[index] = PortfolioSection();
-            break;
-          case 2:
-            _cachedSections[index] = AboutSection();
-            break;
-          case 3:
-            _cachedSections[index] = ContactSection();
-            break;
-        }
-      }
-      return _cachedSections[index]!;
-    }),
+    children: _buildPageViewChildren(),
   );
+}
+
+List<Widget> _buildPageViewChildren() {
+  List<Widget> children = [];
+  for (int index = 0; index < 4; index++) {
+    if (!_cachedSections.containsKey(index)) {
+      switch (index) {
+        case 0:
+          _cachedSections[index] = HomeSection();
+          break;
+        case 1:
+          _cachedSections[index] = PortfolioSection();
+          break;
+        case 2:
+          _cachedSections[index] = AboutSection();
+          break;
+        case 3:
+          _cachedSections[index] = ContactSection();
+          break;
+      }
+    }
+    children.add(_cachedSections[index]!);
+  }
+  return children;
 }
 
 
