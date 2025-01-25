@@ -93,6 +93,7 @@ class ContactSection extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         foregroundColor: Colors.black,
+        iconColor: Colors.black,
         minimumSize: const Size(300, 52),
       ),
       label: Text(label),
